@@ -49,13 +49,8 @@
 					<?php endwhile; ?>
 
 				</div>
-				<div class="labelbox">
-					<div class="next">
-						<a href="<?php echo site_url(); ?>/product/" class="button color-scheme-background">
-							<?php echo get_theme_mod('waorder_nextproduct_text', 'Lihat Semua Produk'); ?>
-						</a>
-					</div>
-				</div>
+				<?php echo do_shortcode( '[ajax_load_more id="load-more-product" container_type="div" css_classes="alm-alm-custom" loading_style="infinite fading-circles" post_type="product" posts_per_page="10" offset="10"]' ) ?>
+				
 				<?php
 
 				$categories = get_theme_mod('homepage_category_list');

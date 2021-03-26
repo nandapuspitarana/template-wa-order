@@ -93,6 +93,7 @@
 	}
 
 	.basket{
+		
 	}
 	.basket i{
 		line-height: 50px;
@@ -303,15 +304,18 @@
 		height:200px;
 	}
 
+	.basket{
+		margin-right: 0px;	
+	}
 }
 @media only screen and (max-width:380px) {
 
 	.slider{
 		margin-top: 20px;
-		height: 150px;
+		height: 80px;
 	}
 	.slider .slide{
-		height: 150px;
+		height: 80px;
 	}
 	.header .searchbox {
 		width: 120px;

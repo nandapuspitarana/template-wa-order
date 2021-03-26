@@ -27,6 +27,7 @@ function waorder_product()
             'title',
             'editor',
             'thumbnail',
+            'excerpt'
         ),
         'can_export' => true,
         'menu_icon' => 'dashicons-products',

@@ -3,6 +3,20 @@
 	Author URI: https://www.fiqhidayat.com
 */
 
+
+.alm-reveal{
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.attachment-alm-builder-test {
+	height: 205px;
+	object-fit: cover;
+	box-shadow: 0 1px 6px 0 rgb(0 0 0 / 10%);
+	position: relative;
+	border-radius: 8px;
+}
+
 /*------------------------------------*\
     MAIN
 \*------------------------------------*/
@@ -423,13 +437,13 @@ header{
 .slider{
 	margin-top: 20px;
 	width: 100%;
-	height: 400px;
+	height: 300px;
 	overflow:hidden;
 	position: relative;
 }
 
 .slider .slide{
-	height: 400px;
+	height: 300px;
 	border-radius: 8px;
 }
 
@@ -445,6 +459,7 @@ header{
 .not-found{
 	text-align:center;
 	padding: 100px 0;
+	width: 100%;
 }
 .indexcat{
 	position: relative;
@@ -629,6 +644,7 @@ header{
 	min-width: 100%;
 	border-radius: 8px 8px 0 0;
 	position: relative;
+	object-fit: cover;
 }
 .productbox .content .thumb .ribbon {
     direction: ltr;
@@ -896,6 +912,7 @@ header{
     background-position: center;
     background-size: cover;
 	border-radius: 8px;
+	object-fit: cover;
 }
 .photo .photobig .ribbon {
     direction: ltr;

@@ -462,8 +462,8 @@ function waorder_theme_url($wp_cdn = true){
 
     $url = get_template_directory_uri();
     if( $wp_cdn ){
-        $url = str_replace('https://', 'https://i0.wp.com/', $url);
-        $url = str_replace('http://', 'https://i0.wp.com/', $url);
+        $url = str_replace('https://', 'https://', $url);
+        $url = str_replace('http://', 'https://', $url);
     }
 
     return $url;
