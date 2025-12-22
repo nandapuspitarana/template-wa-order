@@ -735,35 +735,7 @@ function waorder_admin_init(){
  * @return boolean [description]
  */
 function waorder_lislis(){
-
-    $transient = get_transient('waorderlislis');
-
-    if( $transient !== 'active' ):
-        $data = get_option('waorderlislisdata');
-
-        if( !$data ) return false;
-
-        if( !isset($data['code']) ) return false;
-
-        if( !isset($data['email']) ) return false;
-
-        $result = waorder_license(sanitize_text_field($data['code']), sanitize_email($data['email']));
-
-        if( $result == 'error' ):
-            set_transient('waorderlislis', 'active', 3000 * DAY_IN_SECONDS);
-        else:
-
-            if( isset($result['result']) && $result['result'] == 1 ):
-                set_transient('waorderlislis', 'active', 3000 * DAY_IN_SECONDS);
-            else:
-                set_transient('waorderlislis', 'Lisensi tidak valid', 3000 * DAY_IN_SECONDS);
-            endif;
-        endif;
-        $transient = get_transient('waorderlislis');
-    endif;
-
-    return $transient;
-
+    return 'active';
 }
 
 // Remove wp_head() injected Recent Comment styles

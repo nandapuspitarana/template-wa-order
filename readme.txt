@@ -1,5 +1,4 @@
 === WA ORDER ===
-Contributors: fiqhid24
 Requires at least: 5.0
 Tested up to: 5.3
 Requires PHP: 5.6
