@@ -167,11 +167,7 @@ function waorder_head(){
     ?>
     <style type="text/css">
     <?php include(get_template_directory().'/css/style.min.css'); ?>
-    <?php
-    // include_once(get_template_directory() . '/css/style.css');
-    // include_once(get_template_directory() . '/css/responsive.css');
-    // include_once(get_template_directory() . '/css/slim-select.css');
-    ?>
+    <?php include(get_template_directory().'/css/style.css'); ?>
     </style>
     <script type='text/javascript'>
     /* <![CDATA[ */

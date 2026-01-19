@@ -49,7 +49,11 @@
 					<?php endwhile; ?>
 
 				</div>
-				<?php echo do_shortcode( '[ajax_load_more id="load-more-product" container_type="div" css_classes="alm-alm-custom" loading_style="infinite fading-circles" post_type="product" posts_per_page="10" offset="10"]' ) ?>
+				<?php
+				if ( shortcode_exists( 'ajax_load_more' ) ) {
+					echo do_shortcode( '[ajax_load_more id="load-more-product" container_type="div" css_classes="alm-alm-custom" loading_style="infinite fading-circles" post_type="product" posts_per_page="10" offset="10"]' );
+				}
+				?>
 				
 				<?php
 
