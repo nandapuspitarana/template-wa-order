@@ -18,7 +18,7 @@
 		<?php wp_head(); ?>
 
 	</head>
-	<body <?php body_class(); ?>>
+	<body <?php body_class(); ?> x-data>
 
 		<header>
 			<div class="header">
@@ -32,8 +32,8 @@
 					</div>
 
 					<div class="searchbox">
-						<form class="header-color-scheme-border" method="get" action="<?php echo home_url(); ?>/product" role="search">
-							<input type="search" name="s" placeholder="<?php _e( 'Cari Produk', 'waorder' ); ?>">
+						<form class="header-color-scheme-border" method="get" action="<?php echo home_url(); ?>/product" role="search" x-on:submit.prevent="$store.wa.searchProducts($event.target.querySelector('input[name=s]').value)">
+							<input type="search" name="s" placeholder="<?php _e( 'Cari Produk', 'waorder' ); ?>" x-on:input.debounce.3000ms="$store.wa.searchProducts($event.target.value)">
 							<button type="submit">
 								<i class="lni lni-search-alt header-color-scheme-text"></i>
 							</button>
@@ -41,19 +41,20 @@
 					</div>
 
 					<div class="nav">
-						<i id="nav-menu-toggle" class="lni lni-menu header-color-scheme-text"></i>
-						<?php wp_nav_menu(array(
-							'theme_location' => 'header-menu',
-							'container_id' => 'menu-wrapper',
-							'container_class' => 'menu-wrapper',
-							'menu_class' => 'menu-list clear wrapper'
-						)); ?>
+						<i id="nav-menu-toggle" class="lni lni-menu header-color-scheme-text" x-on:click="$store.wa.toggleMenu()"></i>
+						<div id="menu-wrapper" class="menu-wrapper" x-bind:class="$store.wa.menuOpen ? 'show' : ''" x-show="$store.wa.menuOpen" x-transition.opacity x-cloak x-on:click.away="$store.wa.closeMenu()">
+							<?php wp_nav_menu(array(
+								'theme_location' => 'header-menu',
+								'container' => false,
+								'menu_class' => 'menu-list clear wrapper'
+							)); ?>
+						</div>
 					</div>
 
 					<div class="basket">
-						<i class="lni lni-shopping-basket header-color-scheme-text" onclick="openCartWA();"></i>
+						<i class="lni lni-shopping-basket header-color-scheme-text" x-on:click="$store.wa.openCart()"></i>
 						<div class="counter-basket-item" id="basketItemsCounter">0</div>
 					</div>
-				<div>
+				</div>
 			</div>
 		</header>

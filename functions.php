@@ -98,13 +98,64 @@ function waorder_setup(){
 add_action('wp_enqueue_scripts', 'waorder_scripts');
 function waorder_scripts(){
 
-    //wp_enqueue_style('waorder', get_template_directory_uri() . '/css/style.css', array(), strtotime('now'), 'all');
-    //wp_enqueue_style('waorder-responsive', get_template_directory_uri() . '/css/responsive.css', array(), strtotime('now'), 'all');
-    //wp_enqueue_style('slim-select', get_template_directory_uri() . '/css/slim-select.css', array(), strtotime('now'), 'all');
+    $theme_dir = get_template_directory();
+    $theme_uri = get_template_directory_uri();
+
+    $tailwind_path = $theme_dir . '/css/tailwind.css';
+    if ( file_exists( $tailwind_path ) ) {
+        wp_enqueue_style(
+            'waorder-tailwind',
+            $theme_uri . '/css/tailwind.css',
+            array(),
+            (string) filemtime( $tailwind_path ),
+            'all'
+        );
+    }
+
+    $style_path = $theme_dir . '/css/style.css';
+    if ( file_exists( $style_path ) ) {
+        wp_enqueue_style(
+            'waorder-style',
+            $theme_uri . '/css/style.css',
+            array( 'waorder-tailwind' ),
+            (string) filemtime( $style_path ),
+            'all'
+        );
+    }
+
+    $responsive_path = $theme_dir . '/css/responsive.css';
+    if ( file_exists( $responsive_path ) ) {
+        wp_enqueue_style(
+            'waorder-responsive',
+            $theme_uri . '/css/responsive.css',
+            array( 'waorder-style' ),
+            (string) filemtime( $responsive_path ),
+            'all'
+        );
+    }
+
+    $scripts_path = $theme_dir . '/js/scripts.js';
+    if ( file_exists( $scripts_path ) ) {
+        wp_enqueue_script(
+            'waorder-scripts',
+            $theme_uri . '/js/scripts.js',
+            array(),
+            (string) filemtime( $scripts_path ),
+            array( 'in_footer' => true )
+        );
+    }
+
+    wp_enqueue_script(
+        'waorder-alpine',
+        'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js',
+        array(),
+        null,
+        array( 'in_footer' => true )
+    );
+    wp_script_add_data( 'waorder-alpine', 'strategy', 'defer' );
 
 
     if( !get_post_meta( get_the_ID(), '_elementor_edit_mode', true ) ):
-        wp_deregister_script('jquery');
         wp_deregister_script( 'wp-embed' );
     endif;
 
@@ -120,7 +171,7 @@ function waorder_admin_scripts() {
 
     wp_enqueue_style( 'waorder-admin', get_template_directory_uri() . '/css/admin.css', array(), strtotime('now'), 'all' );
     wp_enqueue_script( 'slim-select', 'https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.23.0/slimselect.min.js', [], strtotime('now'), false );
-    wp_enqueue_script( 'waorder-admin', get_template_directory_uri() . '/js/admin.js', array('jquery','jquery-ui-core'), strtotime('now'), true );
+    wp_enqueue_script( 'waorder-admin', get_template_directory_uri() . '/js/admin.js', array(), strtotime('now'), true );
 
 
 }
@@ -163,12 +214,7 @@ function waorder_minify_script(){
  */
 add_action( 'wp_head', 'waorder_head', 10);
 function waorder_head(){
-    waorder_minify_script();
     ?>
-    <style type="text/css">
-    <?php include(get_template_directory().'/css/style.min.css'); ?>
-    <?php include(get_template_directory().'/css/style.css'); ?>
-    </style>
     <script type='text/javascript'>
     /* <![CDATA[ */
     const main = {
@@ -207,7 +253,7 @@ function waorder_footer(){
                 <div class="heading clear">
                     <i class="lni lni-whatsapp color-scheme-text"></i>
                     <h3><b>Keranjang</b> Belanja</h3>
-                    <div class="close" onclick="closeOrderWA();">×</div>
+                    <div class="close" x-on:click="$store.wa.closeCart()">×</div>
                 </div>
                 <div class="items" id="cartItems">
                 </div>
@@ -392,9 +438,6 @@ function waorder_footer(){
             </div>
         </div>
     </div>
-    <script type="text/javascript">
-    <?php include(get_template_directory().'/js/scripts.js'); ?>
-    </script>
     <?php $pixel_id = get_theme_mod('waorder_fbpixel_id'); ?>
     <?php if( $pixel_id ): ?>
         <!-- Facebook Pixel Code -->
@@ -815,20 +858,11 @@ function waorder_the_content($content){
 
 
 function waorder_content_img($img){
-
-    $regex = '/.class=./si';
-
-    if( preg_match($regex, $img[0], $m) ):
-        $new_img = str_replace('class="', 'class="lazy"', $img[0]);
-        $new_img = str_replace('src="', 'data-src="', $new_img);
-
-    else:
-        $new_img = str_replace('<img ', '<img class="lazy ', $img[0]);
-        $new_img = str_replace('src="', 'data-src="', $new_img);
-    endif;
-
-
-    return $new_img;
+    $tag = $img[0];
+    if ( strpos( $tag, 'loading=' ) === false ) {
+        $tag = str_replace( '<img ', '<img loading="lazy" ', $tag );
+    }
+    return $tag;
 }
 
 function remove_thumbnail_dimensions( $html )

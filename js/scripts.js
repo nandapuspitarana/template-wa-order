@@ -1,49 +1,62 @@
+function waInitLazyImages(root){
+	let rootNode = root || document;
+
+	if ('loading' in HTMLImageElement.prototype) {
+		let images = rootNode.querySelectorAll('img.lazy');
+		images.forEach(function(img){
+			let src = img.getAttribute('data-src') || img.getAttribute('src');
+			if (src) {
+				if (img.src !== src) {
+					img.src = src;
+				}
+				img.classList.add('loaded');
+				img.classList.remove('lazy');
+			}
+		});
+		return;
+	}
+
+	if (!('IntersectionObserver' in window)) {
+		let images = rootNode.querySelectorAll('img.lazy');
+		images.forEach(function(img){
+			let src = img.getAttribute('data-src') || img.getAttribute('src');
+			if (src) {
+				img.src = src;
+				img.classList.add('loaded');
+				img.classList.remove('lazy');
+			}
+		});
+		return;
+	}
+
+	if (!window.waLazyObserver) {
+		window.waLazyObserver = new IntersectionObserver(function(entries, observer){
+			entries.forEach(function(entry){
+				if (entry.isIntersecting) {
+					let img = entry.target;
+					let src = img.getAttribute('data-src') || img.getAttribute('src');
+					if (src) {
+						img.src = src;
+						img.classList.add('loaded');
+						img.classList.remove('lazy');
+						observer.unobserve(img);
+					}
+				}
+			});
+		});
+	}
+
+	let lazyImages = rootNode.querySelectorAll('img.lazy');
+	lazyImages.forEach(function(img){
+		window.waLazyObserver.observe(img);
+	});
+}
+
 (function(w, d){
 	let b = d.getElementsByTagName('body')[0],
 	e = d.documentElement,
 	wWidth = w.innerWidth || e.clientWidth || b.clientWidth,
 	wHeight = w.innerHeight || e.clientHeight|| b.clientHeight;
-
-	let navMenuToggle = document.getElementById('nav-menu-toggle');
-	if( typeof(navMenuToggle) != 'undefined' && navMenuToggle !== null ){
-		let navMenu = document.getElementById('menu-wrapper');
-		if( typeof(navMenu) != 'undefined' && navMenu !== null ){
-			navMenuToggle.onclick = function(){
-				if ( -1 !== navMenu.className.indexOf( 'show' ) ) {
-					navMenu.classList.remove('show');
-					navMenu.style.visibility = 'hidden';
-					navMenu.style.opacity = 0;
-					navMenu.style.display = 'none';
-				}else {
-					navMenu.classList.add('show');
-					navMenu.style.visibility = 'visible';
-					navMenu.style.opacity = 1;
-					navMenu.style.display = 'block';
-				}
-			}
-		}
-	}
-
-
-	let dropDownMenu = document.querySelectorAll('.menu-item-has-children');
-	for(let i=0; i < dropDownMenu.length; i++){
-		dropDownMenu[i].onclick = function(){
-		 	let submenu = dropDownMenu[i].querySelector('.sub-menu');
-			if (submenu.classList.contains('submenushow')) {
-				submenu.style.visibility = 'hidden';
-				submenu.style.opacity = '0';
-				submenu.style.height = '0px';
-				submenu.style.display = 'none';
-				submenu.classList.remove('submenushow');
-			}else{
-				submenu.style.visibility = 'visible';
-				submenu.style.opacity = '1';
-				submenu.style.height = 'auto';
-				submenu.style.display = 'block';
-				submenu.classList.add('submenushow');
-			}
-		}
-	}
 
 	let font = d.createElement('link');
 	font.async = true;
@@ -60,14 +73,7 @@
 	icon.href = 'https://cdn.lineicons.com/2.0/LineIcons.css';
 
 	b.appendChild(icon);
-
-	let lazyload = d.createElement('script'),
-	lazyloadVersion = !('IntersectionObserver' in w) ? '8.17.0' : '10.19.0';
-	lazyload.async = true;
-	lazyload.src = 'https://cdn.jsdelivr.net/npm/vanilla-lazyload@' + lazyloadVersion + '/dist/lazyload.min.js';
-	w.lazyLoadOptions = {elements_selector: '.lazy'};
-
-	b.appendChild(lazyload);
+	waInitLazyImages(d);
 
 	let slider = d.createElement('script');
 	slider.async = true;
@@ -89,9 +95,25 @@
 				swipeAngle: false,
 				controls: false,
 				arrowKeys: false,
-				autoplayButton: false,
+				autoplayButtonOutput: false,
 				autoplayText: ['▶','stop'],
 				lazyload: '.tns-lazy-img',
+			});
+
+			let setSlideBg = function(img){
+				let media = img.closest('.slide-media');
+				if( !media ) return;
+				let src = img.currentSrc || img.getAttribute('src') || '';
+				if( !src ) return;
+				media.style.setProperty('--slide-bg', 'url("'+src+'")');
+			};
+
+			d.querySelectorAll('.slider .tns-lazy-img').forEach(function(img){
+				if( img.complete && img.naturalWidth ){
+					setSlideBg(img);
+				}else{
+					img.addEventListener('load', function(){ setSlideBg(img); }, { once: true });
+				}
 			});
 		}
 	}
@@ -157,9 +179,6 @@
 				$scroll_width = $catbox.scrollWidth,
 				$scroll_left = $catbox.scrollLeft;
 
-				console.log($catbox.clientWidth);
-				console.log($scroll_width);
-
 				if( $scroll_width <= $catbox.clientWidth ){
 					$right.style.display = 'none';
 				}
@@ -204,6 +223,147 @@
 		scrollCategory();
 
 }(window, document));
+
+document.addEventListener('alpine:init', function () {
+	Alpine.store('wa', {
+		menuOpen: false,
+		_originalProductListHtml: null,
+		_searchSeq: 0,
+
+		_skeletonProducts: function (count) {
+			var c = typeof count === 'number' ? count : 8;
+			var html = '';
+			for (var i = 0; i < c; i++) {
+				html +=
+					'<div class="productbox card-body tw-p-3 tw-box-border tw-animate-pulse">' +
+					'<div class="card-inner tw-bg-white tw-rounded-xl tw-border tw-border-brand/20 tw-shadow-sm tw-overflow-hidden">' +
+					'<div class="tw-h-[205px] tw-bg-slate-200"></div>' +
+					'<div class="tw-p-3 tw-flex tw-flex-col tw-gap-2">' +
+					'<div class="tw-h-3 tw-w-20 tw-bg-slate-200 tw-rounded"></div>' +
+					'<div class="tw-h-4 tw-w-3/4 tw-bg-slate-200 tw-rounded"></div>' +
+					'<div class="tw-h-3 tw-w-32 tw-bg-slate-200 tw-rounded"></div>' +
+					'<div class="tw-flex tw-items-center tw-justify-between tw-pt-1">' +
+					'<div class="tw-h-4 tw-w-24 tw-bg-slate-200 tw-rounded"></div>' +
+					'<div class="tw-h-8 tw-w-20 tw-bg-slate-200 tw-rounded"></div>' +
+					'</div>' +
+					'</div>' +
+					'</div>' +
+					'</div>';
+			}
+			return html;
+		},
+
+		toggleMenu: function () {
+			this.menuOpen = !this.menuOpen;
+		},
+		closeMenu: function () {
+			this.menuOpen = false;
+		},
+		openCart: function () {
+			var form = document.getElementById('cartWa');
+			if (!form) return;
+			localStorage.setItem('order_button', 'multi');
+			localStorage.setItem('add_to_cart_button', 'false');
+			if (typeof loadCartItems === 'function') {
+				loadCartItems();
+			}
+			form.classList.add('open');
+		},
+		closeCart: function () {
+			var form = document.getElementById('cartWa');
+			if (!form) return;
+			form.classList.remove('open');
+		},
+		searchProducts: async function (term) {
+			var q = (term || '').trim();
+			var list = document.getElementById('productList');
+			var loadMore = document.getElementById('loadMoreProduct');
+			if (!list) {
+				if (q) {
+					window.location.href = main.site_url + '/product?s=' + encodeURIComponent(q);
+				}
+				return;
+			}
+
+			if (this._originalProductListHtml === null) {
+				this._originalProductListHtml = list.innerHTML;
+			}
+
+			if (!q) {
+				list.innerHTML = this._originalProductListHtml;
+				if (loadMore) loadMore.style.display = '';
+				return;
+			}
+
+			if (loadMore) loadMore.style.display = 'none';
+			var seq = ++this._searchSeq;
+			list.innerHTML = this._skeletonProducts(8);
+			try {
+				var url =
+					main.ajax_url +
+					'?action=waorder_product_search&nonce=' +
+					encodeURIComponent(main.nonce) +
+					'&s=' +
+					encodeURIComponent(q);
+
+				var resp = await fetch(url, { headers: { Accept: 'application/json' } });
+				var json = await resp.json();
+				if (seq !== this._searchSeq) return;
+				if (json && json.success && json.data && typeof json.data.html === 'string') {
+					list.innerHTML = json.data.html;
+					if (typeof waInitLazyImages === 'function') {
+						waInitLazyImages(list);
+					}
+				} else {
+					list.innerHTML = '<div class="tw-w-full tw-text-center tw-p-6 tw-text-slate-500">Gagal memuat hasil</div>';
+				}
+			} catch (e) {
+				if (seq !== this._searchSeq) return;
+				list.innerHTML = '<div class="tw-w-full tw-text-center tw-p-6 tw-text-slate-500">Gagal memuat hasil</div>';
+			}
+		},
+		page: 1,
+		hasMore: true,
+		loadingMore: false,
+		loadMoreProducts: async function () {
+			if (this.loadingMore || !this.hasMore) return;
+			this.loadingMore = true;
+			this.page++;
+			var btn = document.getElementById('loadMoreBtn');
+			var originalBtnText = btn ? btn.innerHTML : '';
+			if (btn) btn.innerHTML = '<span class="tw-animate-spin tw-mr-2">⟳</span> Loading...';
+
+			try {
+				var url =
+					main.ajax_url +
+					'?action=waorder_load_more_product&nonce=' +
+					encodeURIComponent(main.nonce) +
+					'&page=' +
+					this.page;
+
+				var resp = await fetch(url, { headers: { Accept: 'application/json' } });
+				var json = await resp.json();
+				if (json && json.success) {
+					if (json.data.html) {
+						var list = document.getElementById('productList');
+						list.insertAdjacentHTML('beforeend', json.data.html);
+						if (typeof waInitLazyImages === 'function') {
+							waInitLazyImages(list);
+						}
+					}
+					this.hasMore = json.data.has_more;
+				} else {
+					this.hasMore = false;
+				}
+			} catch (e) {
+				console.error(e);
+			} finally {
+				this.loadingMore = false;
+				if (btn) btn.innerHTML = originalBtnText;
+			}
+		},
+	});
+});
 
 function photoChanger(ini){
 	let parent = ini.parentNode.parentNode,
@@ -557,7 +717,14 @@ function singleCartWA(ini){
 }
 
 function closeOrderWA(){
-	window.location.reload();
+	if (window.Alpine && Alpine.store('wa')) {
+		Alpine.store('wa').closeCart();
+		return;
+	}
+	let form = document.getElementById('cartWa');
+	if (form) {
+		form.classList.remove('open');
+	}
 }
 
 function chooseOngkir(ini){

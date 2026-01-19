@@ -1,0 +1,11 @@
+{
+  "name": "template-wa-order-theme",
+  "private": true,
+  "scripts": {
+    "build:css": "tailwindcss -c tailwind.config.js -i ./tailwind.css -o ./css/tailwind.css --minify",
+    "watch:css": "tailwindcss -c tailwind.config.js -i ./tailwind.css -o ./css/tailwind.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}

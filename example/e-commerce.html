@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List Shop - Responsive E-Commerce</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Montserrat:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2d9b9b;
+            --primary-light: #a6d8d8;
+            --background: #faf9f7;
+            --card-bg: #ffffff;
+            --text-dark: #3a3a3a;
+            --text-light: #888888;
+            --border-color: #e8e8e8;
+            --accent: #2d9b9b;
+            --accent-light: #f0f8f8;
+            --destructive: #e74c3c;
+            --success: #27ae60;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        button, .btn {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .container {
+                padding: 0 2rem;
+            }
+        }
+
+        /* Header */
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--accent);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.125rem;
+            font-weight: 700;
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s;
+        }
+
+        .cart-icon:hover {
+            background-color: var(--accent-light);
+        }
+
+        .cart-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--text-dark);
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--destructive);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #f5f5f5 0%, var(--background) 100%);
+            padding: 3rem 0;
+        }
+
+        .hero-content {
+            max-width: 48rem;
+        }
+
+        .hero h2 {
+            font-size: 2.25rem;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        @media (min-width: 768px) {
+            .hero h2 {
+                font-size: 3rem;
+            }
+        }
+
+        .hero p {
+            font-size: 1.125rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #247a7a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45, 155, 155, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--accent-light);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        /* Main Content */
+        main {
+            padding: 3rem 0;
+        }
+
+        /* Category Filter */
+        .filter-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .filter-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+            background-color: white;
+            color: var(--text-dark);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: capitalize;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .filter-btn.active {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* Results Info */
+        .results-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+        }
+
+        .results-count {
+            color: var(--text-light);
+        }
+
+        .results-count strong {
+            color: var(--text-dark);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+        }
+
+        .cart-count {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-light);
+        }
+
+        .cart-count strong {
+            color: var(--text-dark);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (min-width: 640px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .products-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 1280px) {
+            .products-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        /* Product Card */
+        .product-card {
+            background-color: var(--card-bg);
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .product-image-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1;
+            background-color: #f5f5f5;
+            overflow: hidden;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background-color: var(--accent);
+            color: white;
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .product-discount {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            background-color: var(--destructive);
+            color: white;
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+        }
+
+        .quick-add-overlay {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .product-card:hover .quick-add-overlay {
+            opacity: 1;
+        }
+
+        .quick-add-btn {
+            background-color: var(--accent);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.3s;
+        }
+
+        .quick-add-btn:hover {
+            background-color: #247a7a;
+        }
+
+        /* Product Info */
+        .product-info {
+            padding: 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-name {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            transition: color 0.3s;
+        }
+
+        .product-card:hover .product-name {
+            color: var(--accent);
+        }
+
+        /* Rating */
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .star {
+            width: 14px;
+            height: 14px;
+            display: inline-block;
+        }
+
+        .star.filled {
+            color: var(--accent);
+        }
+
+        .star.empty {
+            color: #ddd;
+        }
+
+        .review-count {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-left: 0.25rem;
+        }
+
+        /* Price */
+        .product-price {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+        }
+
+        .price-current {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .price-original {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            text-decoration: line-through;
+        }
+
+        /* Add to Cart Button */
+        .add-to-cart-btn {
+            width: 100%;
+            margin-top: auto;
+            background-color: var(--accent);
+            color: white;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .add-to-cart-btn:hover {
+            background-color: #247a7a;
+            transform: translateY(-2px);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+
+        .empty-state p {
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            margin-top: 5rem;
+        }
+
+        .footer-content {
+            padding: 3rem 0;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+
+        /* SVG Icons */
+        svg {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .icon-shopping-cart {
+            width: 20px;
+            height: 20px;
+        }
+
+        .icon-star {
+            width: 14px;
+            height: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">PS</div>
+                    <div class="logo-text">Product Shop</div>
+                </div>
+                <div class="cart-icon" onclick="toggleCart()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <div class="cart-badge" id="cartBadge" style="display: none;">0</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2>Discover Premium Products</h2>
+                <p>Curated collection of high-quality items for your lifestyle. From electronics to fashion, find everything you need.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary">Shop Now</button>
+                    <button class="btn btn-secondary">Learn More</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <!-- Category Filter -->
+            <div class="filter-section">
+                <label class="filter-label">Categories</label>
+                <div class="filter-buttons" id="filterButtons">
+                    <button class="filter-btn active" onclick="filterProducts('all')">All Products</button>
+                    <button class="filter-btn" onclick="filterProducts('electronics')">Electronics</button>
+                    <button class="filter-btn" onclick="filterProducts('accessories')">Accessories</button>
+                    <button class="filter-btn" onclick="filterProducts('fashion')">Fashion</button>
+                    <button class="filter-btn" onclick="filterProducts('lifestyle')">Lifestyle</button>
+                    <button class="filter-btn" onclick="filterProducts('home')">Home</button>
+                    <button class="filter-btn" onclick="filterProducts('beauty')">Beauty</button>
+                    <button class="filter-btn" onclick="filterProducts('fitness')">Fitness</button>
+                </div>
+            </div>
+
+            <!-- Results Info -->
+            <div class="results-info">
+                <div class="results-count">
+                    Showing <strong id="productCount">12</strong> products
+                </div>
+                <div class="cart-count">
+                    <svg class="icon-shopping-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <strong id="cartCountText">0</strong> in cart
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be inserted here by JavaScript -->
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <p style="font-size: 1.125rem; margin-bottom: 0.5rem;">No products found</p>
+                <p>Try selecting a different category</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-grid">
+                    <div class="footer-section">
+                        <h3>About</h3>
+                        <p style="color: var(--text-light); font-size: 0.875rem;">Premium products for modern living.</p>
+                    </div>
+                    <div class="footer-section">
+                        <h3>Shop</h3>
+                        <ul>
+                            <li><a href="#electronics" onclick="filterProducts('electronics'); return false;">Electronics</a></li>
+                            <li><a href="#fashion" onclick="filterProducts('fashion'); return false;">Fashion</a></li>
+                            <li><a href="#home" onclick="filterProducts('home'); return false;">Home</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3>Support</h3>
+                        <ul>
+                            <li><a href="#">Contact</a></li>
+                            <li><a href="#">FAQ</a></li>
+                            <li><a href="#">Shipping</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3>Legal</h3>
+                        <ul>
+                            <li><a href="#">Privacy</a></li>
+                            <li><a href="#">Terms</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2024 Product Shop. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Product Data
+        const products = [
+            {
+                id: '1',
+                name: 'Premium Wireless Headphones',
+                price: 89.99,
+                originalPrice: 149.99,
+                image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&h=500&fit=crop',
+                rating: 4.5,
+                reviewCount: 328,
+                category: 'electronics',
+                promo: 'Summer Sale',
+                discount: 40
+            },
+            {
+                id: '2',
+                name: 'Minimalist Watch',
+                price: 129.99,
+                originalPrice: 179.99,
+                image: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=500&h=500&fit=crop',
+                rating: 4.8,
+                reviewCount: 256,
+                category: 'accessories',
+                promo: 'New Arrival',
+                discount: 28
+            },
+            {
+                id: '3',
+                name: 'Leather Crossbody Bag',
+                price: 159.99,
+                originalPrice: 219.99,
+                image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&h=500&fit=crop',
+                rating: 4.6,
+                reviewCount: 412,
+                category: 'fashion',
+                discount: 27
+            },
+            {
+                id: '4',
+                name: 'Stainless Steel Water Bottle',
+                price: 34.99,
+                originalPrice: 49.99,
+                image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b8d5?w=500https://images.unsplash.com/photo-1578500494198-246f612d03b3?w=500&h=500&fit=croph=500https://images.unsplash.com/photo-1578500494198-246f612d03b3?w=500&h=500&fit=cropfit=crop',
+                rating: 4.7,
+                reviewCount: 589,
+                category: 'lifestyle',
+                promo: 'Flash Deal',
+                discount: 30
+            },
+            {
+                id: '5',
+                name: 'Portable Phone Charger',
+                price: 44.99,
+                originalPrice: 69.99,
+                image: 'https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=500&h=500&fit=crop',
+                rating: 4.4,
+                reviewCount: 276,
+                category: 'electronics',
+                discount: 36
+            },
+            {
+                id: '6',
+                name: 'Premium Coffee Maker',
+                price: 199.99,
+                originalPrice: 299.99,
+                image: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=500https://images.unsplash.com/photo-1517668808822-9ebb02ae2a0e?w=500&h=500&fit=croph=500https://images.unsplash.com/photo-1517668808822-9ebb02ae2a0e?w=500&h=500&fit=cropfit=crop',
+                rating: 4.9,
+                reviewCount: 445,
+                category: 'home',
+                promo: 'Best Seller',
+                discount: 33
+            },
+            {
+                id: '7',
+                name: 'Wireless Charging Pad',
+                price: 29.99,
+                originalPrice: 49.99,
+                image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&h=500&fit=crop',
+                rating: 4.5,
+                reviewCount: 198,
+                category: 'electronics',
+                discount: 40
+            },
+            {
+                id: '8',
+                name: 'Organic Skincare Set',
+                price: 79.99,
+                originalPrice: 129.99,
+                image: 'https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=500&h=500&fit=crop',
+                rating: 4.7,
+                reviewCount: 334,
+                category: 'beauty',
+                promo: 'Limited Time',
+                discount: 38
+            },
+            {
+                id: '9',
+                name: 'Yoga Mat Premium',
+                price: 54.99,
+                originalPrice: 79.99,
+                image: 'https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=500&h=500&fit=crop',
+                rating: 4.6,
+                reviewCount: 267,
+                category: 'fitness',
+                discount: 31
+            },
+            {
+                id: '10',
+                name: 'Desk Organizer Set',
+                price: 39.99,
+                originalPrice: 59.99,
+                image: 'https://images.unsplash.com/photo-1593062096033-9a26b09da705?w=500&h=500&fit=crop',
+                rating: 4.4,
+                reviewCount: 189,
+                category: 'home',
+                promo: 'Office Essentials',
+                discount: 33
+            },
+            {
+                id: '11',
+                name: 'Running Shoes Pro',
+                price: 129.99,
+                originalPrice: 179.99,
+                image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&h=500&fit=crop',
+                rating: 4.8,
+                reviewCount: 523,
+                category: 'fitness',
+                discount: 28
+            },
+            {
+                id: '12',
+                name: 'Sunglasses UV Protection',
+                price: 89.99,
+                originalPrice: 139.99,
+                image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&h=500&fit=crop',
+                rating: 4.5,
+                reviewCount: 412,
+                category: 'accessories',
+                promo: 'Summer Collection',
+                discount: 36
+            }
+        ];
+
+        let cart = [];
+        let currentFilter = 'all';
+
+        // Initialize
+        function init() {
+            renderProducts();
+            updateCartBadge();
+        }
+
+        // Render Products
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            const emptyState = document.getElementById('emptyState');
+            const productCount = document.getElementById('productCount');
+
+            const filteredProducts = currentFilter === 'all'
+                ? products
+                : products.filter(p => p.category === currentFilter);
+
+            productCount.textContent = filteredProducts.length;
+
+            if (filteredProducts.length === 0) {
+                grid.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            grid.style.display = 'grid';
+            emptyState.style.display = 'none';
+
+            grid.innerHTML = filteredProducts.map(product => `
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/500?text=${encodeURIComponent(product.name)}'">
+                        ${product.promo ? `<div class="product-badge">${product.promo}</div>` : ''}
+                        ${product.discount ? `<div class="product-discount">-${product.discount}%</div>` : ''}
+                        <div class="quick-add-overlay">
+                            <button class="quick-add-btn" onclick="addToCart('${product.id}')">
+                                <svg class="icon-shopping-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="9" cy="21" r="1"></circle>
+                                    <circle cx="20" cy="21" r="1"></circle>
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                                </svg>
+                                Quick Add
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-rating">
+                            ${[...Array(5)].map((_, i) => `
+                                <span class="star ${i < Math.floor(product.rating) ? 'filled' : 'empty'}">★</span>
+                            `).join('')}
+                            <span class="review-count">(${product.reviewCount})</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="price-current">$${product.price.toFixed(2)}</span>
+                            ${product.originalPrice ? `<span class="price-original">$${product.originalPrice.toFixed(2)}</span>` : ''}
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('${product.id}')">
+                            <svg class="icon-shopping-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="9" cy="21" r="1"></circle>
+                                <circle cx="20" cy="21" r="1"></circle>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                            </svg>
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter Products
+        function filterProducts(category) {
+            currentFilter = category;
+            
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            renderProducts();
+        }
+
+        // Add to Cart
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                cart.push(product);
+                updateCartBadge();
+                
+                // Show notification
+                showNotification(`Added "${product.name}" to cart`);
+            }
+        }
+
+        // Update Cart Badge
+        function updateCartBadge() {
+            const badge = document.getElementById('cartBadge');
+            const cartCount = document.getElementById('cartCountText');
+            
+            if (cart.length > 0) {
+                badge.style.display = 'flex';
+                badge.textContent = cart.length;
+                cartCount.textContent = cart.length;
+            } else {
+                badge.style.display = 'none';
+                cartCount.textContent = '0';
+            }
+        }
+
+        // Toggle Cart
+        function toggleCart() {
+            if (cart.length === 0) {
+                alert('Your cart is empty. Add some products!');
+            } else {
+                alert(`You have ${cart.length} item(s) in your cart:\n\n${cart.map(p => `- ${p.name}: $${p.price.toFixed(2)}`).join('\n')}`);
+            }
+        }
+
+        // Show Notification
+        function showNotification(message) {
+            // Simple notification - you can replace with a toast library
+            console.log(message);
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

@@ -17,7 +17,7 @@
 			<?php
 			if( have_posts() ):
 				?>
-				<div class="boxcontainer clear">
+				<div class="boxcontainer clear" id="productList">
 
 					<?php while ( have_posts() ) : the_post(); ?>
 						<?php get_template_part('template/productbox'); ?>

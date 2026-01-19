@@ -63,6 +63,80 @@ function waorder_product_category_taxonomy() {
 
 }
 
+add_action( 'wp_ajax_waorder_product_search', 'waorder_ajax_product_search' );
+add_action( 'wp_ajax_nopriv_waorder_product_search', 'waorder_ajax_product_search' );
+function waorder_ajax_product_search() {
+    $nonce = isset( $_GET['nonce'] ) ? sanitize_text_field( $_GET['nonce'] ) : '';
+    if ( ! ( wp_verify_nonce( $nonce, 'noncenonce' ) || wp_verify_nonce( $nonce, 'waordernonce' ) ) ) {
+        wp_send_json_error( array( 'message' => 'invalid_nonce' ), 403 );
+    }
+
+    $term = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '';
+    if ( $term === '' ) {
+        wp_send_json_success( array( 'html' => '' ) );
+    }
+
+    $query = new WP_Query(
+        array(
+            'post_type'      => 'product',
+            'posts_per_page' => 20,
+            'post_status'    => 'publish',
+            's'              => $term,
+            'no_found_rows'  => true,
+        )
+    );
+
+    ob_start();
+    if ( $query->have_posts() ) {
+        while ( $query->have_posts() ) {
+            $query->the_post();
+            get_template_part( 'template/productbox' );
+        }
+    } else {
+        echo '<div class="tw-w-full tw-text-center tw-p-6 tw-text-slate-500">Produk tidak ditemukan</div>';
+    }
+    wp_reset_postdata();
+
+    wp_send_json_success( array( 'html' => ob_get_clean() ) );
+}
+
+add_action( 'wp_ajax_waorder_load_more_product', 'waorder_ajax_load_more_product' );
+add_action( 'wp_ajax_nopriv_waorder_load_more_product', 'waorder_ajax_load_more_product' );
+function waorder_ajax_load_more_product() {
+    $nonce = isset( $_GET['nonce'] ) ? sanitize_text_field( $_GET['nonce'] ) : '';
+    if ( ! ( wp_verify_nonce( $nonce, 'noncenonce' ) || wp_verify_nonce( $nonce, 'waordernonce' ) ) ) {
+        wp_send_json_error( array( 'message' => 'invalid_nonce' ), 403 );
+    }
+
+    $page = isset( $_GET['page'] ) ? absint( $_GET['page'] ) : 1;
+    $ppp = get_option('posts_per_page');
+
+    $args = array(
+        'post_type'      => 'product',
+        'posts_per_page' => $ppp,
+        'post_status'    => 'publish',
+        'paged'          => $page,
+        'order'          => 'DESC',
+        'orderby'        => 'date',
+    );
+
+    $query = new WP_Query( $args );
+
+    ob_start();
+    if ( $query->have_posts() ) {
+        while ( $query->have_posts() ) {
+            $query->the_post();
+            get_template_part( 'template/productbox' );
+        }
+    }
+    wp_reset_postdata();
+
+    $html = ob_get_clean();
+    $has_more = $query->max_num_pages > $page;
+
+    wp_send_json_success( array( 'html' => $html, 'has_more' => $has_more ) );
+}
+
 /*
  * Add a meta box
  */

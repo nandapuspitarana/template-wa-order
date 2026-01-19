@@ -83,7 +83,7 @@ function waorder_slider_image_metabox_view( $post ) {
 
     <div class="waorder">
         <p>
-            Image atau Gambar harus berukuran 1080px X 400px
+			Image atau Gambar harus berukuran 1200px X 628px
         </p>
         <p>
             <img style="width:100%;" class="slider_image_preview" src="<?php echo $url; ?>"/><br/><br/>

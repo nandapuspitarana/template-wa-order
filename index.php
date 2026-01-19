@@ -15,9 +15,9 @@
 						?>
 						<div class="slide">
 							<?php if($slider_link) : ?>
-								<a href="<?php echo esc_url($slider_link); ?>" target="_blank"><img class="tns-lazy-img" data-src="<?php echo $val; ?>"></a>
+								<a href="<?php echo esc_url($slider_link); ?>" target="_blank"><div class="slide-media"><img class="tns-lazy-img" loading="lazy" data-src="<?php echo $val; ?>"></div></a>
 							<?php else: ?>
-								<img class="tns-lazy-img" data-src="<?php echo $val; ?>">
+								<div class="slide-media"><img class="tns-lazy-img" loading="lazy" data-src="<?php echo $val; ?>"></div>
 							<?php endif; ?>
 						</div>
 					<?php endforeach; ?>
@@ -42,18 +42,21 @@
 						<h3>PRODUK TERBARU</h3>
 					</div>
 				</div>
-				<div class="boxcontainer clear">
+				<div class="boxcontainer clear" id="productList">
 
 					<?php while ( $products->have_posts() ) : $products->the_post(); ?>
 						<?php get_template_part('template/productbox'); ?>
 					<?php endwhile; ?>
 
 				</div>
-				<?php
-				if ( shortcode_exists( 'ajax_load_more' ) ) {
-					echo do_shortcode( '[ajax_load_more id="load-more-product" container_type="div" css_classes="alm-alm-custom" loading_style="infinite fading-circles" post_type="product" posts_per_page="10" offset="10"]' );
-				}
-				?>
+				<div id="loadMoreProduct" class="tw-text-center tw-mt-8">
+					<button id="loadMoreBtn" type="button" x-show="$store.wa.hasMore" x-on:click="$store.wa.loadMoreProducts()" class="tw-bg-white tw-border tw-border-slate-300 tw-text-slate-600 tw-px-6 tw-py-2 tw-rounded-full tw-text-sm tw-font-semibold hover:tw-bg-slate-50 tw-transition-colors">
+						Load More Products
+					</button>
+					<div x-show="!$store.wa.hasMore" class="tw-text-slate-400 tw-text-sm tw-italic tw-py-4" style="display: none;">
+						Semua produk sudah ditampilkan
+					</div>
+				</div>
 				
 				<?php
 

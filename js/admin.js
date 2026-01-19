@@ -1,92 +1,108 @@
-jQuery(document).ready(function ($) {
-    let file_frame;
-
-    $(document).on('click', '.waorder a.gallery-add', function (e) {
-        e.preventDefault();
-
-        if (file_frame)
-            file_frame.close();
-
-        file_frame = wp.media.frames.file_frame = wp.media({
-            title: $(this).data('uploader-title'),
-            button: {
-                text: $(this).data('uploader-button-text'),
-            },
-            multiple: true
-        });
-
-        file_frame.on('select', function () {
-            let listIndex = $('#waorder-gallery-metabox-list li').index($('#waorder-gallery-metabox-list li:last')),
-            selection = file_frame.state().get('selection'),
-            url = '';
-
-            selection.map(function (attachment, i) {
-                attachment = attachment.toJSON(),
-                index = listIndex + (i + 1);
-                if( typeof attachment.sizes.thumbnail !== 'undefined'){
-                    url = attachment.sizes.thumbnail.url;
-                }else{
-                    url = attachment.url;
-                }
-
-                $('#waorder-gallery-metabox-list').append('<li><input type="hidden" name="waorder_gallery_ids[' + index + ']" value="' + attachment.id + '"><img class="image-preview" src="' + url + '"><div class="remove-image"><span class="dashicons dashicons-trash"></span></div></li>');
-            });
-        });
-
-        // makeSortable();
-
-        file_frame.open();
-
-    });
+(function () {
+    var fileFrame;
 
     function resetIndex() {
-        jQuery('#waorder-gallery-metabox-list li').each(function (i) {
-            $(this).find('input:hidden').attr('name', 'waorder_gallery_ids[' + i + ']');
-        });
+        var items = document.querySelectorAll('#waorder-gallery-metabox-list li');
+        for (var i = 0; i < items.length; i++) {
+            var input = items[i].querySelector('input[type="hidden"]');
+            if (input) input.name = 'waorder_gallery_ids[' + i + ']';
+        }
     }
 
-    // function makeSortable() {
-    //     jQuery('#waorder-gallery-metabox-list').sortable({
-    //         opacity: 0.6,
-    //         stop: function () {
-    //             resetIndex();
-    //         }
-    //     });
-    // }
+    function appendAttachment(list, attachment, index) {
+        var url = attachment.url;
+        if (attachment.sizes && attachment.sizes.thumbnail && attachment.sizes.thumbnail.url) {
+            url = attachment.sizes.thumbnail.url;
+        }
 
-    $(document).on('click', '.waorder .remove-image', function (e) {
-        e.preventDefault();
+        var li = document.createElement('li');
+        li.innerHTML =
+            '<input type="hidden" name="waorder_gallery_ids[' +
+            index +
+            ']" value="' +
+            attachment.id +
+            '">' +
+            '<img class="image-preview" src="' +
+            url +
+            '">' +
+            '<div class="remove-image"><span class="dashicons dashicons-trash"></span></div>';
+        list.appendChild(li);
+    }
 
-        $(this).parents('li').animate({opacity: 0}, 200, function () {
-            $(this).remove();
-            resetIndex();
-        });
+    document.addEventListener('click', function (e) {
+        var addBtn = e.target.closest('.waorder a.gallery-add');
+        if (addBtn) {
+            e.preventDefault();
+
+            if (fileFrame) fileFrame.close();
+
+            fileFrame = wp.media.frames.file_frame = wp.media({
+                title: addBtn.getAttribute('data-uploader-title') || '',
+                button: {
+                    text: addBtn.getAttribute('data-uploader-button-text') || '',
+                },
+                multiple: true,
+            });
+
+            fileFrame.on('select', function () {
+                var list = document.getElementById('waorder-gallery-metabox-list');
+                if (!list) return;
+
+                var listIndex = list.querySelectorAll('li').length - 1;
+                var selection = fileFrame.state().get('selection');
+                var i = 0;
+
+                selection.each(function (attachment) {
+                    var data = attachment.toJSON();
+                    var index = listIndex + (i + 1);
+                    appendAttachment(list, data, index);
+                    i++;
+                });
+
+                resetIndex();
+            });
+
+            fileFrame.open();
+            return;
+        }
+
+        var removeBtn = e.target.closest('.waorder .remove-image');
+        if (removeBtn) {
+            e.preventDefault();
+            var li = removeBtn.closest('li');
+            if (li && li.parentNode) {
+                li.parentNode.removeChild(li);
+                resetIndex();
+            }
+        }
     });
 
-    //makeSortable();
+    document.addEventListener('change', function (e) {
+        if (!e.target || !e.target.classList.contains('rajaongkirtype')) return;
 
+        var val = e.target.value;
+        var basics = document.querySelectorAll('.basic');
+        var pros = document.querySelectorAll('.pro');
 
-    $('.rajaongkirtype').on('change', function(){
-        let val = $(this).val();
-
-        if( val == 'starter' ){
-            $('.basic').prop('checked', false);
-            $('.basic').prop('disabled', true);
-
-            $('.pro').prop('checked', false);
-            $('.pro').prop('disabled', true);
-        }else if( val == 'basic' ){
-            $('.basic').prop('disabled', false);
-
-            $('.pro').prop('checked', false);
-            $('.pro').prop('disabled', true);
-        }else{
-            $('.basic').prop('disabled', false);
-
-            $('.pro').prop('disabled', false);
+        function setCheckedDisabled(nodes, checked, disabled) {
+            for (var i = 0; i < nodes.length; i++) {
+                if (typeof checked === 'boolean') nodes[i].checked = checked;
+                nodes[i].disabled = disabled;
+            }
         }
-    })
-});
+
+        if (val === 'starter') {
+            setCheckedDisabled(basics, false, true);
+            setCheckedDisabled(pros, false, true);
+        } else if (val === 'basic') {
+            setCheckedDisabled(basics, null, false);
+            setCheckedDisabled(pros, false, true);
+        } else {
+            setCheckedDisabled(basics, null, false);
+            setCheckedDisabled(pros, null, false);
+        }
+    });
+})();
 
 function customerFollowUp(nomor){
 
@@ -107,14 +123,14 @@ function customerFollowUp(nomor){
 var metaImageFrame;
 function waorderMediaOpen(ini){
 
-    let selector = jQuery(ini).attr('selector'),
-    preview = jQuery(ini).attr('preview');
+    let selector = ini.getAttribute('selector'),
+    preview = ini.getAttribute('preview');
 
     // Sets up the media library frame
     metaImageFrame = wp.media.frames.metaImageFrame = wp.media({
-        title: jQuery(ini).attr('data-uploader-title'),
+        title: ini.getAttribute('data-uploader-title'),
         button: {
-            text:  jQuery(ini).attr('data-uploader-button-text'),
+            text:  ini.getAttribute('data-uploader-button-text'),
         },
     });
 
@@ -125,8 +141,10 @@ function waorderMediaOpen(ini){
         var media_attachment = metaImageFrame.state().get('selection').first().toJSON();
 
         // Sends the attachment URL to our custom image input field.
-        jQuery(selector).val(media_attachment.url);
-        jQuery(preview).attr('src', media_attachment.url);
+        var input = document.querySelector(selector);
+        if (input) input.value = media_attachment.url;
+        var img = document.querySelector(preview);
+        if (img) img.setAttribute('src', media_attachment.url);
 
     });
 
