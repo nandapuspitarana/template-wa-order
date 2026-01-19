@@ -210,6 +210,7 @@ function waorder_product_detail_metabox_view($post){
                 <button type="button" class="tablinks" onclick="waorderOpenTab(event, 'variable')">Variable</button>
                 <button type="button" class="tablinks" onclick="waorderOpenTab(event, 'stock')">Stok</button>
                 <button type="button" class="tablinks" onclick="waorderOpenTab(event, 'delivery')">Pengiriman</button>
+                <button type="button" class="tablinks" onclick="waorderOpenTab(event, 'rating')">Rating</button>
             </div>
 
             <div id="pricing" class="tabcontent" style="display: block">
@@ -305,6 +306,19 @@ function waorder_product_detail_metabox_view($post){
                     $weight = empty($weight) ? 1000 : intval($weight);
                     ?>
                     <input type="number" class="regular-text" value="<?php echo $weight; ?>" name="product_weight" required><br/>
+                </div>
+            </div>
+
+            <div id="rating" class="tabcontent">
+                <div class="fieldbox">
+                    <label style="font-weight:bold">Nilai Rating</label><br/>
+                    <input type="text" class="regular-text" value="<?php echo get_post_meta($post->ID, 'product_rating_val', true); ?>" name="product_rating_val"><br/>
+                    <span style="font-style: italic;font-size: 13px;">*Input nilai rating (contoh: 4.5, 5.0)</span>
+                </div>
+                <div class="fieldbox">
+                    <label style="font-weight:bold">Jumlah Ulasan</label><br/>
+                    <input type="number" class="regular-text" value="<?php echo get_post_meta($post->ID, 'product_rating_count', true); ?>" name="product_rating_count"><br/>
+                    <span style="font-style: italic;font-size: 13px;">*Input jumlah ulasan (contoh: 469)</span>
                 </div>
             </div>
         </div>
@@ -404,6 +418,14 @@ function waorder_product_metabox_save( $post_id ) {
 
     if ( isset( $_POST[ 'product_ribbon' ] ) ) {
         update_post_meta( $post_id, 'product_ribbon', sanitize_text_field($_POST['product_ribbon']) );
+    }
+
+    if ( isset( $_POST[ 'product_rating_val' ] ) ) {
+        update_post_meta( $post_id, 'product_rating_val', sanitize_text_field($_POST['product_rating_val']) );
+    }
+
+    if ( isset( $_POST[ 'product_rating_count' ] ) ) {
+        update_post_meta( $post_id, 'product_rating_count', sanitize_text_field($_POST['product_rating_count']) );
     }
 
 }

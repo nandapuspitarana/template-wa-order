@@ -50,7 +50,7 @@
 
 				</div>
 				<div id="loadMoreProduct" class="tw-text-center tw-mt-8">
-					<button id="loadMoreBtn" type="button" x-show="$store.wa.hasMore" x-on:click="$store.wa.loadMoreProducts()" class="tw-bg-white tw-border tw-border-slate-300 tw-text-slate-600 tw-px-6 tw-py-2 tw-rounded-full tw-text-sm tw-font-semibold hover:tw-bg-slate-50 tw-transition-colors">
+					<button id="loadMoreBtn" type="button" x-show="$store.wa.hasMore" x-on:click="$store.wa.loadMoreProducts()" class="tw-bg-white tw-border tw-border-slate-300 tw-text-slate-600 tw-px-24 tw-py-8 tw-rounded-full tw-text-sm tw-font-semibold hover:tw-bg-slate-50 tw-transition-colors">
 						Load More Products
 					</button>
 					<div x-show="!$store.wa.hasMore" class="tw-text-slate-400 tw-text-sm tw-italic tw-py-4" style="display: none;">
