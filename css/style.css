@@ -1024,7 +1024,7 @@ header{
 }
 .productbox .card-footer-line .pricing{
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 	gap: 6px;
 	text-align: left;
 	line-height: 16px;

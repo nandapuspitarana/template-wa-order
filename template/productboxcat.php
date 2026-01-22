@@ -74,9 +74,11 @@
                 <input type="hidden" name="order_item_weight" value="<?php echo esc_attr( $weight ); ?>">
                 <input type="hidden" name="order_item_photo" value="<?php echo esc_attr( $photo ); ?>">
 
-                <div class="pricing tw-flex tw-items-baseline tw-gap-2 tw-justify-start tw-w-full">
+                <div class="pricing tw-flex tw-flex-col tw-items-start tw-gap-1 tw-w-full tw-text-left">
+                    <?php if( $price_slik ): ?>
+                        <span class="price_slik tw-text-slate-400 tw-text-xs"><del>Rp <?php echo number_format($price_slik,0,',','.'); ?></del></span>
+                    <?php endif; ?>
                     <span class="price tw-font-semibold tw-text-slate-900 tw-text-base tw-tracking-tight">Rp <?php echo number_format($price,0,',','.'); ?></span>
-                    <?php if( $price_slik ): ?><span class="price_slik tw-text-slate-400 tw-text-xs"><del>Rp <?php echo number_format($price_slik,0,',','.'); ?></del></span><?php endif; ?>
                 </div>
                 <div class="card-add-wrap tw-w-full">
                     <button type="button" x-on:click="addToCartWA($event.currentTarget)" class="btn btn-sm card-add-btn tw-w-full tw-justify-center tw-inline-flex tw-items-center tw-gap-1 tw-bg-white tw-border tw-border-slate-300 tw-text-slate-600 tw-rounded-full tw-px-3 tw-py-1.5 tw-text-xs tw-font-semibold hover:tw-bg-slate-50 tw-transition-colors">
