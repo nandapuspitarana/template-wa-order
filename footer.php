@@ -1,6 +1,6 @@
         <?php
         $featured = get_theme_mod('waorder_featured_onoff', 'show');
-        if( $featured == 'show' ):
+        if( $featured == 'show' && !is_singular('product') ):
         ?>
         <div class="featurebox">
 

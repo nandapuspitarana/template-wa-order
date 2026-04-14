@@ -320,6 +320,11 @@ function waorder_product_detail_metabox_view($post){
                     <input type="number" class="regular-text" value="<?php echo get_post_meta($post->ID, 'product_rating_count', true); ?>" name="product_rating_count"><br/>
                     <span style="font-style: italic;font-size: 13px;">*Input jumlah ulasan (contoh: 469)</span>
                 </div>
+                <div class="fieldbox">
+                    <label style="font-weight:bold">Review Singkat</label><br/>
+                    <textarea class="regular-text" name="product_review" rows="4"><?php echo esc_textarea(get_post_meta($post->ID, 'product_review', true)); ?></textarea><br/>
+                    <span style="font-style: italic;font-size: 13px;">*Teks ulasan singkat untuk ditampilkan di halaman detail produk</span>
+                </div>
             </div>
         </div>
     </div>
@@ -426,6 +431,10 @@ function waorder_product_metabox_save( $post_id ) {
 
     if ( isset( $_POST[ 'product_rating_count' ] ) ) {
         update_post_meta( $post_id, 'product_rating_count', sanitize_text_field($_POST['product_rating_count']) );
+    }
+
+    if ( isset( $_POST[ 'product_review' ] ) ) {
+        update_post_meta( $post_id, 'product_review', sanitize_textarea_field($_POST['product_review']) );
     }
 
 }

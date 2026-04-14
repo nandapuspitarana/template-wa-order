@@ -2,7 +2,7 @@
     <div class="card-inner tw-bg-white tw-rounded-xl tw-border tw-border-brand/40 tw-shadow-sm tw-overflow-hidden">
         <div class="card-thumb-wrap tw-relative">
             <?php
-            $thumb = get_the_post_thumbnail_url(get_the_ID(), 'full');
+            $thumb = get_the_post_thumbnail_url(get_the_ID(), 'medium');
             ?>
             <a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>">
                 <div class="thumb tw-h-[205px] tw-bg-black/5 tw-overflow-hidden">
@@ -64,7 +64,7 @@
             if ( $weight < 1 ) {
                 $weight = 1000;
             }
-            $photo = get_the_post_thumbnail_url(get_the_ID(), 'full');
+            $photo = get_the_post_thumbnail_url(get_the_ID(), 'medium');
             ?>
             <form class="card-footer-line tw-flex tw-flex-col tw-gap-3 tw-pt-1">
                 <input type="hidden" name="order_item_id" value="<?php echo esc_attr( get_the_ID() ); ?>">
