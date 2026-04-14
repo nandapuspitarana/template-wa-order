@@ -15,6 +15,10 @@ require_once(ABSPATH . 'wp-admin/includes/file.php');
 require_once(ABSPATH . 'wp-admin/includes/media.php');
 require_once(ABSPATH . 'wp-admin/includes/image.php');
 
+// Disable SSL verification for development
+add_filter('https_ssl_verify', '__return_false');
+add_filter('https_local_ssl_verify', '__return_false');
+
 echo "Seeding digital products...\n";
 
 $digital_products = [
